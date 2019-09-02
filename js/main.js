@@ -1,12 +1,12 @@
 !function () {
   var duration = 30
 
-  $('.action').on('click', 'button', function(e) {
+  $('.action').on('click', 'button', function (e) {
     let $button = $(e.currentTarget) // button
     let speed = $button.attr('data-speed')
     $button.addClass('active')
       .siblings('.active').removeClass('active')
-    switch(speed) {
+    switch (speed) {
       case 'slow':
         duration = 50
         break
@@ -18,15 +18,17 @@
         break
     }
   })
+
   function writeCode(prefix, code, fn) {
     let container = document.querySelector('#code')
+    container.innerHTML = prefix || ''
     let styleTag = document.querySelector('#styleTag')
     let n = 0
     //用setTimeout代替setInterval, setTimeout会调用一次结束，为了改变time。
     // setTimeout比setInterval，更容易控制。
-    let id = setTimeout(function run(){ //让id是最新的setTimeout
+    let id = setTimeout(function run() { //让id是最新的setTimeout
       n += 1
-      container.innerHTML = code.substring(0, n)
+      container.innerHTML = Prism.highlight(code.substring(0, n), Prism.languages.css)
       styleTag.innerHTML = code.substring(0, n)
       container.scrollTop = container.scrollHeight
       if (n < code.length) {
@@ -39,6 +41,10 @@
   /*
   * 皮卡丘的皮
   */
+  .token.selector{ color: rgb(133,153,0); }
+  .token.property{ color: rgb(187,137,0); }
+  .token.function{ color: rgb(42,161,152); }
+
   .preview {
     height:100%;
     display: flex;
@@ -185,8 +191,8 @@
     border-radius: 50%;
   }
   /*
-  * 送莽莽云一只皮卡丘
+  * 送你一只皮卡丘
   */
   `
-  writeCode('',code)
+  writeCode('', code)
 }.call()

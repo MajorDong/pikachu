@@ -1,18 +1,39 @@
 !function () {
+  var duration = 30
+
+  $('.action').on('click', 'button', function(e) {
+    let $button = $(e.currentTarget) // button
+    let speed = $button.attr('data-speed')
+    $button.addClass('active')
+      .siblings('.active').removeClass('active')
+    switch(speed) {
+      case 'slow':
+        duration = 50
+        break
+      case 'normal':
+        duration = 30
+        break
+      case 'fast':
+        duration = 10
+        break
+    }
+  })
   function writeCode(prefix, code, fn) {
     let container = document.querySelector('#code')
     let styleTag = document.querySelector('#styleTag')
     let n = 0
-    let id = setInterval(() => {
+    //用setTimeout代替setInterval, setTimeout会调用一次结束，为了改变time。
+    // setTimeout比setInterval，更容易控制。
+    let id = setTimeout(function run(){ //让id是最新的setTimeout
       n += 1
       container.innerHTML = code.substring(0, n)
       styleTag.innerHTML = code.substring(0, n)
       container.scrollTop = container.scrollHeight
-      if (n >= code.length) {
-        window.clearInterval(id)
+      if (n < code.length) {
+        id = setTimeout(run, duration)
         fn && fn.call()
       }
-    }, 0)
+    }, duration)
   }
   let code = `
   /*
@@ -20,7 +41,6 @@
   */
   .preview {
     height:100%;
-    border: 1px solid green;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -165,7 +185,7 @@
     border-radius: 50%;
   }
   /*
-  * 送你一只皮卡丘
+  * 送莽莽云一只皮卡丘
   */
   `
   writeCode('',code)
